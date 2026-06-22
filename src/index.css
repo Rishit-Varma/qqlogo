@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/* Clash Display — the futuristic display face (Fontshare, free, an
+   Awwwards favourite). Self-hosted Space Grotesk / Sora fall back if
+   the CDN is blocked, so the type stays distinctive either way. */
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap');
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/sora/600.css";
+
+/* JetBrains Mono (body / HUD labels). */
+@import "@fontsource/jetbrains-mono/300.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
+/*
+  Design tokens. Inter is the display face (bold, tight tracking) for
+  readable headings like Borealis; JetBrains Mono carries body + the
+  small HUD labels. Cyan aurora accent matches the particle sphere.
+*/
+@theme {
+  --color-bg:         #04060a;
+  --color-bg-deep:    #020306;
+  --color-panel:      #0a0d12;
+  --color-rule:       rgba(255, 255, 255, 0.10);
+  --color-ink:        #ffffff;
+  --color-ink-mute:   rgba(255, 255, 255, 0.66);
+  --color-cyan:       #5eeaff;
+  --color-cyan-soft:  rgba(94, 234, 255, 0.55);
+  --color-cyan-dim:   rgba(94, 234, 255, 0.18);
+  --color-thermal:    #ff6a3d;
+
+  --font-display:  "Clash Display", "Space Grotesk", "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  color-scheme: dark;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  /* Settle onto whole sections so the scroll rests where the orbital
+     ring is aligned. Proximity keeps it gentle (never traps the user). */
+  scroll-snap-type: y proximity;
+}
+body, #root { background: transparent; color: var(--color-ink); }
+
+/* Each tagged section is a snap point at its top. */
+[data-snap-section] { scroll-snap-align: start; }
+
+/* Respect reduced-motion: no snap, no smooth jumps. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-snap-type: none; scroll-behavior: auto; }
+}
+
+body {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01", "cv01", "cv03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection { background: var(--color-cyan); color: #04060a; }
+
+* {
+  scrollbar-color: var(--color-cyan-dim) transparent;
+  scrollbar-width: thin;
+}
+
+/* ============================================================
+   Borealis-style type utilities
+   ============================================================ */
+
+/* Big display headings — Clash Display, uppercase, tight tracking. */
+.qq-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+}
+
+/* Italic-light second line of a two-line heading. */
+.qq-display-sub {
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 01 / 02 index marks. */
+.qq-index {
+  font-family: var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+  font-size: 11px;
+}
+
+/* small mono labels (HUD). */
+.qq-label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b8b8b8;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* badge pill (section eyebrow). */
+.qq-badge {
+  font-family: var(--font-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* mono body copy. */
+.qq-body {
+  font-family: var(--font-mono);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--color-ink-mute);
+}
+
+/* ============================================================
+   Buttons — Borealis white pill + cyan ghost
+   ============================================================ */
+.qq-btn {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  padding: 0.85rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.22s, color 0.22s, border-color 0.22s;
+}
+.qq-btn-primary {
+  background: #ffffff;
+  color: #04060a;
+  border: 1px solid #ffffff;
+}
+.qq-btn-primary:hover { background: #f4f3ee; transform: translateY(-1px); }
+.qq-btn-ghost {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--color-cyan);
+  border: 1px solid var(--color-cyan-dim);
+}
+.qq-btn-ghost:hover { border-color: var(--color-cyan-soft); color: #fff; transform: translateY(-1px); }
+
+/* ============================================================
+   Glass cards (ported from eciv) + neon glow
+   ============================================================ */
+/* NB: no backdrop-filter — a blur on every card re-samples the GPU on
+   every scroll frame and was the main source of lag on content pages.
+   Solid, slightly translucent fills give the same look for ~free. */
+.qq-glass {
+  background: rgba(8, 11, 16, 0.78);
+  border: 1px solid rgba(94, 234, 255, 0.16);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+.qq-glass-card {
+  background: rgba(9, 12, 17, 0.72);
+  border: 1px solid rgba(94, 234, 255, 0.16);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.30);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.qq-glass-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(94, 234, 255, 0.4);
+  box-shadow: 0 14px 44px rgba(94, 234, 255, 0.12);
+}
+.qq-neon {
+  box-shadow: 0 0 0 1px rgba(94, 234, 255, 0.3),
+              0 0 18px rgba(94, 234, 255, 0.35),
+              0 0 40px rgba(94, 234, 255, 0.18);
+}
+
+/* ============================================================
+   Readability scrims — dark radial vignette behind text so it
+   reads cleanly over the particle sphere (Borealis technique).
+   ============================================================ */
+.qq-scrim-left {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 22% 45%,
+              rgba(4, 6, 10, 0.86) 0%,
+              rgba(4, 6, 10, 0.45) 42%,
+              transparent 72%);
+}
+.qq-scrim-center {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(110% 85% at 50% 46%,
+              rgba(4, 6, 10, 0.82) 0%,
+              rgba(4, 6, 10, 0.32) 45%,
+              transparent 74%);
+}
