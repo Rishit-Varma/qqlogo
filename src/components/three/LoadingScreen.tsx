@@ -86,7 +86,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[100] bg-[#04060a] flex flex-col items-center justify-center"
+          className="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center"
         >
           <div className="w-[min(92vw,560px)] h-[min(92vw,560px)] max-h-[62vh]">
             <Canvas
