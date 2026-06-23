@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, Suspense } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, useAnimations, Environment, Center, Bounds } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { useGLTF, Environment, Center, Bounds } from '@react-three/drei';
 import { AnimatePresence, motion } from 'framer-motion';
 import * as THREE from 'three';
 
@@ -9,11 +9,9 @@ const MIN_DISPLAY_MS = 2000;
 
 useGLTF.preload(GLB_URL);
 
-/** Spinning GLB logo. Plays embedded animation if present, else rotates. */
+/** Static GLB logo — no spin, no animation. */
 function LogoModel({ onReady }: { onReady: () => void }) {
-  const group = useRef<THREE.Group>(null);
-  const { scene, animations } = useGLTF(GLB_URL);
-  const { actions } = useAnimations(animations, group);
+  const { scene } = useGLTF(GLB_URL);
 
   // Clone so repeated mounts don't share a mutated graph.
   const model = useMemo(() => {
@@ -33,27 +31,13 @@ function LogoModel({ onReady }: { onReady: () => void }) {
     return s;
   }, [scene]);
 
-  useEffect(() => {
-    const first = Object.values(actions)[0];
-    if (first) {
-      first.reset().fadeIn(0.3).play();
-      first.setLoop(THREE.LoopRepeat, Infinity);
-    }
-    onReady();
-    return () => { Object.values(actions).forEach((a) => a?.stop()); };
-  }, [actions, onReady]);
-
-  useFrame((_, delta) => {
-    if (group.current) group.current.rotation.y += delta * 0.7;
-  });
+  useEffect(() => { onReady(); }, [onReady]);
 
   return (
     <Bounds fit margin={1.2}>
-      <group ref={group}>
-        <Center>
-          <primitive object={model} />
-        </Center>
-      </group>
+      <Center>
+        <primitive object={model} />
+      </Center>
     </Bounds>
   );
 }
