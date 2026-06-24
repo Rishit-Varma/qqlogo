@@ -21,7 +21,7 @@
   readable headings like Borealis; JetBrains Mono carries body + the
   small HUD labels. Cyan aurora accent matches the particle sphere.
 */
-@theme {
+:root {
   --color-bg:         #04060a;
   --color-bg-deep:    #020306;
   --color-panel:      #0a0d12;
